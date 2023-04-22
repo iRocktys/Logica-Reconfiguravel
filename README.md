@@ -1,1 +1,1 @@
-# L-gica-Reconfigur-vel
+# Logica-Reconfiguravel

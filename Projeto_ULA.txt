@@ -1,0 +1,138 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.std_logic_arith.all;
+use IEEE.std_logic_unsigned.all;
+
+entity ULA is
+
+port (
+
+	botao_operacao		:	in		std_logic;								-- Botao para mudar as operacoes
+	botao_resultado	:	in		std_logic;								-- Botao pra mostrar resultado
+	saida_display		: 	out	std_logic_vector (14 downto 0);	-- Saida Display	
+	saida_display_o	: 	out	std_logic_vector (6 downto 0);	-- Saida Display	Operacao
+	saida_led			: 	out   std_logic_vector (3 downto 0); 	-- Saida led
+	x1, x2				: 	in 	std_logic_vector (3 downto 0)  	-- Entrada
+
+);
+
+end entity ULA;
+
+architecture arquitetura of ULA is
+
+	signal aux_x1				:	std_logic_vector (4 downto 0);	-- auxiliar de x1
+	signal aux_x2				:	std_logic_vector (4 downto 0);	-- auxiliar de x2
+	signal aux_x1_i			:	integer := 0;							-- auxiliar de x1
+	signal aux_x2_i			:	integer := 0;							-- auxiliar de x2
+	signal resultado_arit	: 	integer := 0; 							-- Saida Aritmetica
+	signal resultado_log		: 	std_logic_vector (3 downto 0); 	-- Saida Logica
+	signal operacao 			: 	integer := 1; 							-- Operacao e Contador para trocar operacao
+
+begin
+	
+	ula : process(x1, x2, botao_operacao)
+	
+	begin
+	
+-- Botao de troca de Operacao
+		if (rising_edge(botao_operacao)) then						
+		
+			if (operacao = 6) then
+				operacao <= 1 ;
+				
+			else
+				operacao <= operacao + 1;
+
+			end if;
+		end if;
+		
+-- Concatenação das entradas		
+		aux_x1 <= "0" & x1;
+		aux_x2 <= "0" & x2;
+		
+-- Conversao para inteiro
+		aux_x1_i <= conv_integer(aux_x1);
+		aux_x2_i <= conv_integer(aux_x2);
+		
+-- Operacoes do ULA
+		case operacao is
+			when 1 => resultado_arit <= aux_x1_i + aux_x2_i;
+			when 2 => resultado_arit <= aux_x1_i - aux_x2_i;
+			when 3 => resultado_log	 <= x1 and x2;
+			when 4 => resultado_log  <= x1 or x2;
+			when 5 => resultado_log  <= x1 xor x2;
+			when 6 => resultado_log  <= not x1;
+			when others => NULL;
+		end case;
+		
+-- Aparecer Resultado da aritmetica no display
+		if (botao_resultado = '0') then
+			case resultado_arit is
+				when -1	=>	saida_display <=	"101111111111001";	-- 1
+				when -2	=>	saida_display <=	"101111110100100";	-- 2
+				when -3	=>	saida_display <=	"101111110110000";	-- 3
+				when -4	=>	saida_display <=	"101111110011001";	-- 4
+				when -5	=>	saida_display <=	"101111110010010";	-- 5
+				when -6	=>	saida_display <=	"101111110000010";	-- 6
+				when -7	=>	saida_display <=	"101111111111000";	-- 7
+				when -8	=>	saida_display <=	"101111110000000";	-- 8
+				when -9	=>	saida_display <=	"101111110011000";	-- 9
+				when -10	=>	saida_display <=	"011110011000000";	-- 10
+				when -11	=>	saida_display <=	"011110011111001";	-- 11
+				when -12	=>	saida_display <=	"011110010100100";	-- 12
+				when -13	=>	saida_display <=	"011110010110000";	-- 13
+				when -14	=>	saida_display <=	"011110010011001";	-- 14
+				when -15	=>	saida_display <=	"011110010010010";	-- 15
+				when 0	=>	saida_display <=	"111111111000000";	-- 0
+				when 1	=>	saida_display <=	"111111111111001";	-- 1
+				when 2	=>	saida_display <=	"111111110100100";	-- 2
+				when 3	=>	saida_display <=	"111111110110000";	-- 3
+				when 4	=>	saida_display <=	"111111110011001";	-- 4
+				when 5	=>	saida_display <=	"111111110010010";	-- 5
+				when 6	=>	saida_display <=	"111111110000010";	-- 6
+				when 7	=>	saida_display <=	"111111111111000";	-- 7
+				when 8	=>	saida_display <=	"111111110000000";	-- 8
+				when 9	=>	saida_display <=	"111111110011000";	-- 9
+				when 10	=>	saida_display <=	"111110011000000";	-- 10
+				when 11	=>	saida_display <=	"111110011111001";	-- 11
+				when 12	=>	saida_display <=	"111110010100100";	-- 12
+				when 13	=>	saida_display <=	"111110010110000";	-- 13
+				when 14	=>	saida_display <=	"111110010011001";	-- 14
+				when 15	=>	saida_display <=	"111110010010010";	-- 15
+				when 16	=>	saida_display <=	"111110010000010";	-- 16
+				when 17	=>	saida_display <=	"111110011111000";	-- 17
+				when 18	=>	saida_display <=	"111110010000000";	-- 18
+				when 19	=>	saida_display <=	"111110010011000";	-- 19
+				when 20	=>	saida_display <=	"101001001000000";	-- 20
+				when 21	=>	saida_display <=	"101001001111001";	-- 21
+				when 22	=>	saida_display <=	"101001000100100";	-- 22
+				when 23	=>	saida_display <=	"101001000110000";	-- 23
+				when 24	=>	saida_display <=	"101001000011001";	-- 24
+				when 25	=>	saida_display <=	"101001000010010";	-- 25
+				when 26	=>	saida_display <=	"101001000000010";	-- 26
+				when 27	=>	saida_display <=	"101001001111000";	-- 27
+				when 28	=>	saida_display <=	"101001000000000";	-- 28
+				when 29	=>	saida_display <=	"101001000011000";	-- 29
+				when 30	=>	saida_display <=	"101100001000000";	-- 30
+				when others =>	NULL;
+			end case;
+		end if;
+		
+-- Aparecer resultado da lógica no LED		
+		if (botao_resultado = '0') then
+			saida_led <= resultado_log;
+		end if; 
+		
+	end process ula;	
+	
+	with operacao select
+		saida_display_o <= "1111001" when 1,		-- 0 (1 no display)
+								 "0100100" when 2,		-- 1 (2 no display)
+								 "0110000" when 3,		-- 2 (3 no display)
+								 "0011001" when 4,		-- 3 (4 no display)
+								 "0010010" when 5,		-- 4 (5 no display)
+								 "0000010" when 6,		-- 5 (6 no display
+								 "1111111" when others;
+ 	
+end architecture arquitetura;

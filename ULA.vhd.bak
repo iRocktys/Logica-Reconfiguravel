@@ -1,0 +1,39 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.std_logic_arith.all;
+use IEEE.std_logic_unsigned.all;
+
+entity ULA is
+
+port (
+
+	botao_operacao		:	in		std_logic;								-- Botao para mudar as operacoes
+	botao_resultado	:	in		std_logic;								-- Botao pra mostrar resultado
+	x1, x2				: 	in 	std_logic_vector (3 downto 0);  	-- Entrada
+	saida					: 	out 	std_logic_vector (3 downto 0); 	-- Saida
+	operacao				: 	in 	std_logic_vector (2 downto 0)		-- Operacao
+
+);
+
+end entity ULA;
+
+architecture Arquitetura of ULA is
+
+begin
+	
+	process(x1, x2, operacao)
+	
+	begin
+	
+		case operacao is
+			when "000"	=>	saida	<=	x1		+		x2;	-- Adicao
+			when "001"	=>	saida	<=	x1		-		x2;	-- Subtracao
+			when "010"	=>	saida	<=	x1 	AND 	x2;	-- E
+			when "011"	=>	saida	<=	x1	  	OR	  	x2;	-- OU
+			when "100"	=>	saida	<=	x1	 	XOR	x2;	-- OU exclusivo
+			when "101"	=>	saida	<=	NOT 	x1;			-- Complemento
+			when others =>	saida	<=	"ZZZZ";
+		end case;
+	end process;	
+end architecture arquitetura;

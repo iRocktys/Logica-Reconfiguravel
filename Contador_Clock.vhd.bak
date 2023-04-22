@@ -1,0 +1,71 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.std_logic_arith.all;
+
+
+entity ContadorClock is 
+	port(
+		-- Entrada e saida do programa
+		clock : in std_logic;
+		reset : in std_logic;
+		saida_led : out std_logic_vector (0 to 3);
+		saida 	: out std_logic_vector (0 to 6)
+		
+		);
+	end ContadorClock;
+
+architecture Project of ContadorClock is
+	-- Sinal pode ser usado entre os processos
+	-- Funciona basicamente como um fio interligando processos
+	-- O sinal pode armazenar o sinal anterior, ou seja, pode conter o valor da simulacao anterior
+	constant clockfre : integer := 50e6;
+	signal ticks : integer := 0;
+	signal aux : integer := 0;
+	signal cont : std_logic_vector(0 to 3);
+	
+begin
+	process (clock) is
+	-- Variaveis podem ser criadas somente dentro de processos
+	-- Variaveis nao armazenam resultados anteriores
+	begin
+		if rising_edge(clock) then
+			if (ticks = clockfre -1) then
+				ticks <= 0;
+				if aux = 15 then 
+					aux <= 0;
+				else
+					if reset = '0' then
+						aux <= 0;
+					else
+						aux <= aux + 1;
+					end if;
+				end if;
+			else
+				ticks <= ticks + 1;
+			end if;
+		end if;
+		cont <= conv_std_logic_vector(aux, 4);
+	end process;
+	
+	with aux select
+		saida <= "0000001" when 0,
+					"1001111" when 1,
+					"0010010" when 2,
+					"0000110" when 3,
+					"1001100" when 4,
+					"0100100" when 5,
+					"0100000" when 6,
+					"0001111" when 7,
+					"0000000" when 8,
+					"0001100" when 9,
+					"0001000" when 10,
+					"1100000" when 11,
+					"1110010" when 12,
+					"1000010" when 13,
+					"0000110" when 14,
+					"0111000" when 15,
+					"0100010" when others;
+
+					
+end Project;

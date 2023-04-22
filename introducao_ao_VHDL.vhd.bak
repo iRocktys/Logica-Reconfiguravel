@@ -1,0 +1,25 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity Project is port(
+	entradaA : in std_logic;
+	entradaB : in std_logic;
+	entradaC : in std_logic;
+	entradaD : in std_logic;
+	entradaE : in std_logic;
+	saida: out std_logic
+	
+);
+end Project;
+
+architecture Proj of is
+	signal sigA : std_logic;
+	signal sigB : std_logic;
+	
+begin
+	sigA <= entradaA and entradaB;
+	sigB <= entradaD xor entradaE;
+	entradaC <= not entradaC;
+	
+	saida <= SigA or sigB or entradaC;
+end Proj;
